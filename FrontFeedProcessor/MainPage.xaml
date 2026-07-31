@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="FrontFeedProcessor.MainPage">
+
+    <ScrollView>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+                <RowDefinition Height="25"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+            <!--Month Selector-->
+            <Button Text="&#8678;" BackgroundColor="Goldenrod" Grid.Row="1" Grid.Column="0" MinimumHeightRequest="25" MaximumWidthRequest="100" Padding="0" Clicked="MonthButton_Clicked" CommandParameter="-1"/>
+            <Label x:Name="ActiveMonth" BackgroundColor="AliceBlue" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2" MaximumHeightRequest="25" MaximumWidthRequest="200" HorizontalTextAlignment="Center"/>
+            <Button Text="&#8680;" BackgroundColor="Goldenrod" Grid.Row="1" Grid.Column="3" MinimumHeightRequest="25" MaximumWidthRequest="100" Padding="0" Clicked="MonthButton_Clicked" CommandParameter="1"/>
+            <!--Sheet Row Selector-->
+            <Button Text="&#8678;" BackgroundColor="Blue" Grid.Row="2" Grid.Column="0" MinimumHeightRequest="25" MaximumWidthRequest="100" Padding="0" Clicked="RowButton_Clicked" CommandParameter="-1"/>
+            <Label x:Name="ActiveRow" BackgroundColor="AliceBlue" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" MaximumHeightRequest="25" MaximumWidthRequest="200" HorizontalTextAlignment="Center"/>
+            <Button Text="&#8680;" BackgroundColor="Blue" Grid.Row="2" Grid.Column="3" MinimumHeightRequest="25" MaximumWidthRequest="100" Padding="0" Clicked="RowButton_Clicked" CommandParameter="1"/>
+            <Border Stroke="Blue" Grid.Column="0" Grid.ColumnSpan="4" Grid.Row="3" Grid.RowSpan="11" >
+                <ScrollView >
+                    <Grid ColumnDefinitions="200, 200"
+                        RowDefinitions="auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto,auto" >
+                        <Label Text="Special Notes" BackgroundColor="Yellow" Grid.Column="0" Grid.Row="0"/>
+                        <Label x:Name="SpecialNoteData" BackgroundColor="Yellow" Grid.Column="1" Grid.Row="0"/>
+                        <Label Text="Lead Source Type" Grid.Column="0" Grid.Row="1"/>
+                        <Label x:Name="LeadSourceTypeData" Grid.Column="1" Grid.Row="1"/>
+                        <Label Text="Lead Source Name" Grid.Column="0" Grid.Row="2"/>
+                        <Label x:Name="LeadSourceNameData" Grid.Column="1" Grid.Row="2"/>
+                        <Label Text="Previous Descriptor Job Code" Grid.Column="0" Grid.Row="3"/>
+                        <Label x:Name="PreviousDescriptorJobCodeData" Grid.Column="1" Grid.Row="3"/>
+                        <Label Text="Vendor Job #" Grid.Column="0" Grid.Row="4"/>
+                        <Label x:Name="VendorJobData" Grid.Column="1" Grid.Row="4"/>
+                        <Label Text="Descriptor Job Code" Grid.Column="0" Grid.Row="5"/>
+                        <Label x:Name="DecriptorJobCodeData" Grid.Column="1" Grid.Row="5"/>
+                        <Label Text="State Selection" Grid.Column="0" Grid.Row="6"/>
+                        <Label x:Name="StateSelectionData" Grid.Column="1" Grid.Row="6"/>
+                        <Label Text="Intrafile Suppression Days" Grid.Column="0" Grid.Row="7"/>
+                        <Label x:Name="IntrafileSuppresionDaysData" Grid.Column="1" Grid.Row="7"/>
+                        <Label Text="Additional Suppression Criteria" Grid.Column="0" Grid.Row="8"/>
+                        <Label x:Name="AddSuppCriteriaData" Grid.Column="1" Grid.Row="8"/>
+                        <Label Text="Additional Info" Grid.Column="0" Grid.Row="9"/>
+                        <Label x:Name="AddInfoData" Grid.Column="1" Grid.Row="9"/>
+                        <Label Text="Control Test" Grid.Column="0" Grid.Row="10"/>
+                        <Label x:Name="ControlTestData" Grid.Column="1" Grid.Row="10"/>
+                        <Label Text="Control Test Description" Grid.Column="0" Grid.Row="11"/>
+                        <Label x:Name="ControlDescriptionData" Grid.Column="1" Grid.Row="11"/>
+                        <Label Text="Control Test Variant Name" Grid.Column="0" Grid.Row="12"/>
+                        <Label x:Name="CTVariantNameData" Grid.Column="1" Grid.Row="12"/>
+                        <Label Text="Planned QTY" Grid.Column="0" Grid.Row="13"/>
+                        <Label x:Name="PlannedQTYData" Grid.Column="1" Grid.Row="13"/>
+                        <Label Text="Network 1" Grid.Column="0" Grid.Row="14"/>
+                        <Label x:Name="Network1Data" Grid.Column="1" Grid.Row="14"/>
+                        <Label Text="Bin 1" Grid.Column="0" Grid.Row="15"/>
+                        <Label x:Name="Bin1Data" Grid.Column="1" Grid.Row="15"/>
+                        <Label Text="PCN 1" Grid.Column="0" Grid.Row="16"/>
+                        <Label x:Name="PCN1Data" Grid.Column="1" Grid.Row="16"/>
+                        <Label Text="Group Name 1" Grid.Column="0" Grid.Row="17"/>
+                        <Label x:Name="GroupName1Data" Grid.Column="1" Grid.Row="17"/>
+                        <Label Text="Member ID Start 1" Grid.Column="0" Grid.Row="18"/>
+                        <Label x:Name="MIDStart1Data" Grid.Column="1" Grid.Row="18"/>
+                        <Label Text="Member ID End 1" Grid.Column="0" Grid.Row="19"/>
+                        <Label x:Name="MIDEnd1Data" Grid.Column="1" Grid.Row="19"/>
+                        <Label Text="Network 1 Customer Questions Call" Grid.Column="0" Grid.Row="20"/>
+                        <Label x:Name="Net1CQCallData" Grid.Column="1" Grid.Row="20"/>
+                        <Label Text="Network 1 Pharmacist Questions Call" Grid.Column="0" Grid.Row="21"/>
+                        <Label x:Name="Net1PhQCallData" Grid.Column="1" Grid.Row="21"/>
+                        <Label Text="Class of Postage" Grid.Column="0" Grid.Row="22"/>
+                        <Label x:Name="ClassOfPostageData" Grid.Column="1" Grid.Row="22"/>
+                        <Label Text="Card Preprinted Shell Code" Grid.Column="0" Grid.Row="23"/>
+                        <Label x:Name="CardShellCodeData" Grid.Column="1" Grid.Row="23"/>
+                    </Grid>
+                </ScrollView>
+            </Border>
+            <!--Controls-->
+            <Label Text="Select Row" Grid.Column="1" Grid.Row="14"/>
+            <CheckBox x:Name="SelectedBox" Grid.Column="2" Grid.Row="14" CheckedChanged="SelectedBox_CheckedChanged"/>
+            <Button x:Name="FilePickerButton" Text="Select Encrypted Files" Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="2" MinimumHeightRequest="25" Padding="0" Clicked="FilePickerButton_Clicked"/>
+            <Border Grid.Column="4" Grid.ColumnSpan="3" Grid.Row="3">
+                <ScrollView Orientation="Horizontal">
+                    <Label x:Name="FilesChosen" />
+                </ScrollView>
+            </Border>
+            <Label Text="Job Number" Grid.Column="4" Grid.Row="4" />
+            <Entry x:Name="JobNumberEntry" Grid.Column="5" Grid.Row="4" MaxLength="6"/>
+            <CheckBox x:Name="NoMemberIdBox" Grid.Column="4" Grid.Row="6" HorizontalOptions="End"/>
+            <Label Text="Do Not Assign Member IDs" Grid.Column="5" Grid.Row="6" Grid.ColumnSpan="2" />
+            <Button x:Name="ProcessButton" Text="Begin Processing" Grid.Column="4" Grid.ColumnSpan="2" Grid.Row="8"  MinimumHeightRequest="25" Padding="0" Clicked="ProcessButton_Clicked" />
+            <!--Logo-->
+            <Image Source="zenger_logo.png" HeightRequest="100" WidthRequest="300" Aspect="AspectFit" SemanticProperties.Description="ZG Logo and tag line." 
+                   Grid.Column="3" Grid.ColumnSpan="4" Grid.Row="19" Grid.RowSpan="2"/>
+            <!--Application Settings Button-->
+            <Button x:Name="SettingsButton" Text="&#9965;" Grid.Column="9" Grid.Row="0" MinimumWidthRequest="25" MinimumHeightRequest="25" Padding="0" Clicked="SettingsButton_Clicked"/>
+        </Grid>
+        
+    </ScrollView>
+
+</ContentPage>

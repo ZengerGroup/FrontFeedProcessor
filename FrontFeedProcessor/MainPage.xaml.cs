@@ -293,7 +293,7 @@ namespace FrontFeedProcessor
             var ReportWindow = new Window(new ReportPage(report))
             {
                 Title = "Process Report",
-                Width = 600,
+                Width = 1000,
                 Height = 600,
                 X = 100,
                 Y = 100

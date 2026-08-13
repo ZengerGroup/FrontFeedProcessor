@@ -17,7 +17,7 @@ namespace FrontFeedProcessor
             MailingSegment = process.MailingSegment;
             ClassOfPostage = process.JobBatches[0].MergedRow.ClassOfPostage;
             ZGJobNumber = process.ZGJobNumber;
-            ReportPath = Path.Combine(process.WorkingPath, String.Format("{0}({1})_Report.txt", MailingSegment, ZGJobNumber));
+            ReportPath = Path.Combine(process.WorkingPath, String.Format("{0}({1})_FF Report.txt", MailingSegment, ZGJobNumber));
             OtherWarnings = "";
             GenerateBatchDetails(process.JobBatches);
             if (!GenerateReportFile()) OtherWarnings = "Failed to generate report file!";

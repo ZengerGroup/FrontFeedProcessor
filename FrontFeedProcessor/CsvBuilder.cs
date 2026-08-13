@@ -75,7 +75,7 @@ namespace FrontFeedProcessor
             return $"{record.SignupTime},{record.LeadKey},{record.GoodRxId},{record.FirstName},{record.LastName},{record.Address},{record.Address2},"
                 + $"{record.City},{record.State},{record.Zip},{record.LeadSourceName},";
         }
-        private string AddNetworkInfo(Row row, Record record, bool  noMemberId)
+        private string AddNetworkInfo(Row row, Record record, bool noMemberId)
         {
             string net1 = (noMemberId) ? "" : row.Network1;
             string bin1 = (noMemberId) ? "" : row.Bin1;
@@ -88,10 +88,14 @@ namespace FrontFeedProcessor
             string mem1start = (noMemberId) ? "" : record.MemberId0;
             string mem2start = (noMemberId) ? "" : record.MemberId1;
             string mem2end = (noMemberId) ? "" : row.MemberIdEnd2;
+            string net1CQs = (row.Network1CustomerQ == "") ? "" : string.Format("Customers: {0}", row.Network1CustomerQ);
+            string net1PQs = (row.Network1PharmacistQ == "") ? "" : string.Format("Pharmacists: {0}", row.Network1PharmacistQ);
+            string net2CQs = (row.Network2CustomerQ == "") ? "" : string.Format("Customers: {0}", row.Network2CustomerQ);
+            string net2PQs = (row.Network2PharmacistQ == "") ? "" : string.Format("Pharmacists: {0}", row.Network2PharmacistQ);
             return $"{net1},{record.ToMail},{bin1},{pcn1},{group1},{mem1start},{mem2start},{record.Network},{net2},{bin2},{pcn2},{group2},"
                 + $"{row.DescriptorJobCode1},{row.DescriptorJobCode2},{row.LeadSourceType},{row.LeadSourceName},{ZGJobNumber},{MailingSegment},"
                 + $"{row.StateSelection},{row.DaysForIntrafileSuppression},{row.ControlTest},{row.ControlTestDescription},{row.ControlTestVariantName},"
-                + $"{row.Network1CustomerQ},{row.Network1PharmacistQ},{mem2start},{mem2end},{row.Network2CustomerQ},{row.Network2PharmacistQ},";
+                + $"{net1CQs},{net1PQs},{mem2start},{mem2end},{net2CQs},{net2PQs},";
         }
         private string AddPostageInfo(Row row, Record record, string classOfPostage, string packageId, string selectOrAllZips, string cardsInMailing)
         {
@@ -102,11 +106,8 @@ namespace FrontFeedProcessor
         private string GetCardsInMailing(Row row)
         {
             if (row.Network2 != "") return "2";
-            else
-            {
-                if (row.Network1 != "") return "1";
-                else return "0";
-            }
+            if (row.Network1 != "") return "1";
+            else return "0";
         }
         private string GetMonthYear(string month)
         {

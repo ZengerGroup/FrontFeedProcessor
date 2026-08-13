@@ -77,7 +77,7 @@ namespace FrontFeedProcessor
             {
                 SuppliedPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "supplied");
                 WorkingPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "working");
-                LiveJobPath = Path.Combine(_settings.LiveJobsPath, GetPrefixFolder(jobNumber), String.Format("{0} GRX DM", jobNumber));
+                LiveJobPath = Path.Combine(_settings.LiveJobsPath, GetPrefixFolder(jobNumber), String.Format("{0} GRX {1}", jobNumber, djc));
                 string reportsPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "Reports");
                 string pdfProofPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "PDF Proofs");
                 string dataPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "Data");

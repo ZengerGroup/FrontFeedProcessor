@@ -12,5 +12,6 @@ namespace FrontFeedProcessor
         public string GRXPath { get; set; } = @"\\zengerfp02\mail_production_encrypted\GRX_DM_Prgms\GRX";
         public string AppentionPath { get; set; } = @"\\zengerfp02\mail_production_encrypted\GRX_DM_Prgms\MISC & Archive\GoodRx ID Appention Tracking Spreadsheet.xlsx";
         public string LiveJobsPath { get; set; } = @"Z:\";
+        public string ProofingMailTrafficPath { get; set; }
     }
 }

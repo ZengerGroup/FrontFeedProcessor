@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FrontFeedProcessor
 {
@@ -15,13 +16,13 @@ namespace FrontFeedProcessor
         JobBatch[] Batches;
         GrxIdAppentionHandler AppentionHandler;
         private Dictionary<string, string> DateStrings;
-        public CsvBuilder(List<JobBatch> batches, bool dontAssignMemberId, string outputPath, string mailingSegment, string jobNumber, GrxIdAppentionHandler handler)
+        public CsvBuilder(JobBatch[] batches, string workingPath, bool dontAssignMemberId, string mailingSegment, string jobNumber, GrxIdAppentionHandler handler)
         {
             ZGJobNumber = jobNumber;
             DateStrings = GenerateDateStrings();
-            OutputPath = outputPath;
             NoMemberIds = dontAssignMemberId;
-            Batches = batches.ToArray();
+            OutputPath = workingPath;
+            Batches = batches;
             MailingSegment = mailingSegment;
             Header = GenerateHeader();
             AppentionHandler = handler;
@@ -39,25 +40,26 @@ namespace FrontFeedProcessor
         }
         private void ProcessAllBatches()
         {
-            Logger.WriteLog("Expecting to process {0} batches.", false, Batches.Length.ToString());
-            StreamWriter sWriter = new StreamWriter(OutputPath);
-            sWriter.WriteLine(Header);
-            for(int i = 0; i < Batches.Length; i++) ProcessIndividualBatch(Batches[i], sWriter);
-            sWriter.Close();
+            Logger.WriteLog("Processing batches.", false);
+            for (int i = 0; i < Batches.Length; i++) ProcessIndividualBatch(Batches[i]);
             AppentionHandler.Close();
             Logger.WriteLog("Processing complete.", false);
         }
-        private void ProcessIndividualBatch(JobBatch batch, StreamWriter streamWriter) 
+        private void ProcessIndividualBatch(JobBatch batch)
         {
+            string batchOutput = Path.Combine(OutputPath, String.Format("{0}_FF.csv", batch.DataFileName));
+            StreamWriter sWriter = new StreamWriter(batchOutput);
+            sWriter.WriteLine(Header);
             AppentionHandler.StartRow();
-            for(int i = 0; i < batch.BatchRecords.Count; i++)
+            for (int i = 0; i < batch.BatchRecords.Count; i++)
             {
                 batch.BatchRecords[i].SetMemberId(batch.MergedRow.MemberIdStart1, batch.MergedRow.MemberIdStart2);
                 string line = BuildLine(batch.BatchRecords[i], batch.MergedRow, NoMemberIds);
-                streamWriter.WriteLine(line);
+                sWriter.WriteLine(line);
             }
             if (AppentionHandler.GeneratedNewIds()) AppentionHandler.AddRowToSheet(batch.MergedRow.DescriptorJobCode1, batch.MergedRow.LeadSourceName, ZGJobNumber);
             AppentionHandler.CloseRow();
+            sWriter.Close();
         }
         private string BuildLine(Record record, Row row, bool noMemberId)
         {

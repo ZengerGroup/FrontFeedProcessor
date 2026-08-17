@@ -7,6 +7,7 @@ namespace FrontFeedProcessor
 {
     public class JobBatch
     {
+        public string DataFileName;
         public List<Row> BatchRows;
         public List<Record> BatchRecords;
         public Row MergedRow;
@@ -15,14 +16,16 @@ namespace FrontFeedProcessor
             BatchRows = new List<Row>();
             BatchRecords = new List<Record>();
         }
-        public JobBatch(Row batchRow, List<Record> batchRecords)
+        public JobBatch(Row batchRow, List<Record> batchRecords, string dataFileName)
         {
+            DataFileName = Path.GetFileNameWithoutExtension(dataFileName);
             BatchRows = new List<Row>();
             BatchRows.Add(batchRow);
             BatchRecords = batchRecords;
         }
-        public JobBatch(List<Row> batchRows, List<Record> batchRecords)
+        public JobBatch(List<Row> batchRows, List<Record> batchRecords, string dataFileName)
         {
+            DataFileName = dataFileName;
             BatchRows = batchRows;
             BatchRecords = batchRecords;
         }

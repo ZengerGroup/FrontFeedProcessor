@@ -3,21 +3,21 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FrontFeedProcessor.BatchSummary">
     <Border Stroke="GoldenRod">
-        <Grid RowDefinitions="25,25,25,25,25,25,25,25,25" ColumnDefinitions="150, 850">
-            <Label Text="Descriptor Job Code:" Grid.Row="1" Grid.Column="1" />
-            <Label x:Name="DescriptorJobCodeData" Grid.Row="1" Grid.Column="2"/>
-            <Label Text="Final Record Count:" Grid.Row="2" Grid.Column="1"/>
-            <Label x:Name="RecordCountData" Grid.Row="2" Grid.Column="2" />
-            <Label Text="Days for Intrafile Suppression:" Grid.Row="3" Grid.Column="1" />
-            <Label x:Name="DaysForSuppressionData" Grid.Row="3" Grid.Column="2" />
-            <Label Text="Additional Suppression Criteria:" Grid.Row="4" Grid.Column="1" Grid.RowSpan="2" />
-            <Label x:Name="CriteriaData" Grid.Row="4" Grid.Column="2"/>
-            <Label Text="Additional Info:" Grid.Row="5" Grid.Column="1"/>
-            <Label x:Name="InfoData" Grid.Row="5" Grid.Column="2" />
-            <Label Text="State Selection:" Grid.Row="6" Grid.Column="1"/>
-            <Label x:Name="StateSelectionData" Grid.Row="6" Grid.Column="2" />
-            <Label Text="Network:" Grid.Row="7" Grid.Column="1" />
-            <Label x:Name="NetworkData" Grid.Row="7" Grid.Column="2" />
+        <Grid RowDefinitions="25,25,25,25,25,25,25,25,25" ColumnDefinitions="250,750">
+            <Label Text="Descriptor Job Code:" Grid.Row="1" Grid.Column="0" />
+            <Label x:Name="DescriptorJobCodeData" Grid.Row="1" Grid.Column="1"/>
+            <Label Text="Final Record Count:" Grid.Row="2" Grid.Column="0"/>
+            <Label x:Name="RecordCountData" Grid.Row="2" Grid.Column="1" />
+            <Label Text="Days for Intrafile Suppression:" Grid.Row="3" Grid.Column="0" />
+            <Label x:Name="DaysForSuppressionData" Grid.Row="3" Grid.Column="1" />
+            <Label Text="Additional Suppression Criteria:" Grid.Row="4" Grid.Column="0" Grid.RowSpan="2" />
+            <Label x:Name="CriteriaData" Grid.Row="4" Grid.Column="1"/>
+            <Label Text="Additional Info:" Grid.Row="5" Grid.Column="0"/>
+            <Label x:Name="InfoData" Grid.Row="5" Grid.Column="1" />
+            <Label Text="State Selection:" Grid.Row="6" Grid.Column="0"/>
+            <Label x:Name="StateSelectionData" Grid.Row="6" Grid.Column="1" />
+            <Label Text="Network:" Grid.Row="7" Grid.Column="0" />
+            <Label x:Name="NetworkData" Grid.Row="7" Grid.Column="1" />
         </Grid>
     </Border>
 </ContentView>

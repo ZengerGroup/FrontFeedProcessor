@@ -16,6 +16,7 @@ namespace FrontFeedProcessor
             List<string> decryptedList = new List<string>();
             for(int i = 0; i< allFiles.Length; i++) if (!allFiles[i].Contains(".gpg")) decryptedList.Add(allFiles[i]);
             DecryptedFiles = decryptedList.ToArray();
+            for (int i = 0; i < decryptedList.Count; i++) Logger.WriteLog(decryptedList[i], false);
         }
         public List<Record> GetRecords(string path)
         {

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -32,32 +33,28 @@ namespace FrontFeedProcessor
             JobBatches = new List<JobBatch>();
             AppentionHandler = new GrxIdAppentionHandler(_settings.AppentionPath);
         }
-        public bool PrepareJobForProcessing(List<Row> rowsToProcess, string workingJobNumber)
+        public bool PrepareJobForProcessing(List<Row> rowsToProcess, string workingJobNumber, string workingYear)
         {
             try
             {
                 ZGJobNumber = workingJobNumber;
                 RowsToProcess = rowsToProcess;
                 MailingSegment = GenerateMailingSegment(rowsToProcess);
-                CreateDirectories(MailingSegment, workingJobNumber);
+                CreateDirectories(MailingSegment, workingJobNumber, workingYear);
                 MoveEncryptedFiles();
                 if (!DecryptAllFiles()) return false;
                 Parser = new DataParser(SuppliedPath);
                 LogJobStats(workingJobNumber);
                 return true;
             }
-            catch
-            {
-                return false;
-            }
+            catch { return false; }
         }
         public bool ProcessJob(List<Row> rowsToProcess, string workingJobNumber, bool dontAssignMemberId)
         {
             Logger.WriteLog("Starting process.", false);
             try
             {
-                string outputPath = Path.Combine(WorkingPath, String.Format("{0}({1})_FF.txt", MailingSegment, ZGJobNumber));
-                OutputBuilder = new CsvBuilder(JobBatches, dontAssignMemberId, outputPath, MailingSegment, ZGJobNumber, AppentionHandler);
+                OutputBuilder = new CsvBuilder(JobBatches.ToArray(), WorkingPath, dontAssignMemberId, MailingSegment, ZGJobNumber, AppentionHandler);
                 Report = new ProcessReport(this);
                 return true;
             }
@@ -71,7 +68,7 @@ namespace FrontFeedProcessor
         {
             EncryptedPaths.Add(fullPath);
         }
-        private bool CreateDirectories(string djc, string jobNumber)
+        private bool CreateDirectories(string djc, string jobNumber, string workingYear)
         {
             try
             {
@@ -81,6 +78,9 @@ namespace FrontFeedProcessor
                 string reportsPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "Reports");
                 string pdfProofPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "PDF Proofs");
                 string dataPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "Data");
+                string proofMailPath = Path.Combine(_settings.ProofingMailTrafficPath, workingYear,
+                    String.Format("{0}_{1}", DateTime.ParseExact(RowsToProcess[0].Month, "MMMM", CultureInfo.InvariantCulture).Month.ToString("00"), RowsToProcess[0].Month));
+                Directory.CreateDirectory(proofMailPath);
                 Directory.CreateDirectory(SuppliedPath);
                 Directory.CreateDirectory(WorkingPath);
                 Directory.CreateDirectory(reportsPath);

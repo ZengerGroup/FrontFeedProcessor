@@ -71,15 +71,19 @@ namespace FrontFeedProcessor
         public void SetMemberId(string memberId1, string memberId2)
         {
             string mem1NoChars = Regex.Replace(memberId1, "[A-Za-z]*", "");
+            string mem1Padding = "";
+            for (int i = 0; i < mem1NoChars.Length; i++) mem1Padding += "0";
             string mem1NoDigits = Regex.Replace(memberId1, "[0-9]*", "");
             int mem1Int = Convert.ToInt32(mem1NoChars) + RecordNumber;
-            MemberId0 = String.Format("{0}{1}", mem1NoDigits, mem1Int);
+            MemberId0 = String.Format("{0}{1}", mem1NoDigits, mem1Int.ToString(mem1Padding));
             if(memberId2 != "")
             {
                 string mem2NoChars = Regex.Replace(memberId2, "[A-Za-z]*", "");
+                string mem2Padding = "";
+                for(int i = 0; i < mem2NoChars.Length; i++) mem2Padding += "0";
                 string mem2NoDigits = Regex.Replace(memberId2, "[0-9]*", "");
                 int mem2Int = Convert.ToInt32(mem2NoChars) + RecordNumber;
-                MemberId1 = String.Format("{0}{1}", mem2NoDigits, mem2Int);
+                MemberId1 = String.Format("{0}{1}", mem2NoDigits, mem2Int.ToString(mem2Padding));
             }
         }
     }

@@ -1,15 +1,15 @@
-﻿using Google.Apis.Auth.OAuth2;
-using Google.Apis.Sheets.v4;
+﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Extensions;
+using CommunityToolkit.Maui.Views;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Services;
+using Google.Apis.Sheets.v4;
 using Google.Apis.Sheets.v4.Data;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System.ComponentModel;
-using Microsoft.Extensions.Logging;
-using CommunityToolkit.Maui.Views;
-using CommunityToolkit.Maui.Extensions;
-using CommunityToolkit.Maui;
-using CommunityToolkit.Maui.Core;
 
 namespace FrontFeedProcessor
 {
@@ -17,6 +17,7 @@ namespace FrontFeedProcessor
     {
         private readonly AppSettings _settings;
         private readonly GoogleCredential _credentials;
+        //private readonly Catalogue _catalogue;
         private WorkbookHandler Workbook;
         private ProcessHandler Process;
 
@@ -27,14 +28,18 @@ namespace FrontFeedProcessor
             Logger.InitializeLogger(configuration);
             Workbook = new WorkbookHandler(configuration);
             Process = new ProcessHandler(configuration);
-            UpdateDisplay(true);
+            UpdateDisplay(true, true);
         }
-        private async void UpdateDisplay(bool download)
+        private async void UpdateDisplay(bool download, bool firstLoad)
         {
             if (download)
             {
-                if (await Workbook.UpdateData()) UpdateValues();
-                else await DisplayAlertAsync("Connection Error", "Unable to download plan data. Please Restart and/or check your connection.", "Okay");
+                try
+                {
+                    if (await Workbook.UpdateData(firstLoad)) UpdateValues();
+                    else await DisplayAlertAsync("Connection Error", "Unable to download plan data. Please Restart and/or check your connection.", "Okay");
+                }
+                catch(Exception e) { Logger.WriteLog(e.Message, false); }
             }
             else UpdateValues();
         }
@@ -42,7 +47,7 @@ namespace FrontFeedProcessor
         {
             SetSpecialNoteText();
             SelectedBox.IsChecked = Workbook.Worksheets[Workbook.SheetIndex].SheetRows[Workbook.RowIndex].Selected;
-            ActiveMonth.Text = Workbook.Worksheets[Workbook.SheetIndex].Title;
+            ActiveMonth.Text = String.Format("{0} {1}", Workbook.Worksheets[Workbook.SheetIndex].Title, Workbook.WorkingYear);
             ActiveRow.Text = Workbook.RowIndex.ToString();
             LeadSourceTypeData.Text = Workbook.Worksheets[Workbook.SheetIndex].SheetRows[Workbook.RowIndex].LeadSourceType;
             LeadSourceNameData.Text = Workbook.Worksheets[Workbook.SheetIndex].SheetRows[Workbook.RowIndex].LeadSourceName;
@@ -80,18 +85,41 @@ namespace FrontFeedProcessor
         }
         private void MonthButton_Clicked(object sender, EventArgs e)
         {
-            if (sender is Button button) Workbook.SheetIndex += Int32.Parse(button.CommandParameter.ToString());
-            if (Workbook.SheetIndex < 0) Workbook.SheetIndex = 0;
-            else if (Workbook.SheetIndex >= Workbook.Worksheets.Count) Workbook.SheetIndex = Workbook.Worksheets.Count - 1;
-            else Workbook.ChangeSheet();
-            UpdateDisplay(false);
+            try
+            {
+                if (sender is Button button) Workbook.SheetIndex += Int32.Parse(button.CommandParameter.ToString());
+                if (Workbook.SheetIndex < 0)
+                {
+                    if (Workbook.YearIsAvailable(-1))
+                    {
+                        Workbook.ChangeYear(-1);
+                        UpdateDisplay(true, false);
+                    }
+                    else Workbook.SheetIndex = 0;
+                }
+                else if (Workbook.SheetIndex >= Workbook.Worksheets.Count) 
+                { 
+                    if (Workbook.YearIsAvailable(1))
+                    {
+                        Workbook.ChangeYear(1);
+                        UpdateDisplay(true, false);
+                    }
+                    else Workbook.SheetIndex = Workbook.Worksheets.Count - 1;
+                }
+                else
+                {
+                    Workbook.ChangeSheet();
+                    UpdateDisplay(false, false);
+                }
+            }
+            catch (Exception ex) { Logger.WriteLog(ex.Message, false); }
         }
         private void RowButton_Clicked(object sender, EventArgs e)
         {
             if (sender is Button button) Workbook.RowIndex += Int32.Parse(button.CommandParameter.ToString());
             if (Workbook.RowIndex <= 0) Workbook.RowIndex = 1;
             else if (Workbook.RowIndex >= Workbook.RowCount) Workbook.RowIndex = Workbook.RowCount - 1;
-            UpdateDisplay(false);
+            UpdateDisplay(false, false);
         }
         private void SelectedBox_CheckedChanged(object sender, CheckedChangedEventArgs e)
         {
@@ -166,14 +194,14 @@ namespace FrontFeedProcessor
         {
             if (enteredJobNumber != planJobNumber)
             {
-                if (enteredJobNumber == string.Empty || enteredJobNumber == null || enteredJobNumber == "") return false;
+                if (enteredJobNumber == string.Empty || enteredJobNumber == null || enteredJobNumber.Trim() == "") return false;
                 else return true;
             }
             else return false;
         }
         private async Task RunProcess(List<Row> rowsToProcess, string JobNumber)
         {
-            if (!Process.PrepareJobForProcessing(rowsToProcess, JobNumber))
+            if (!Process.PrepareJobForProcessing(rowsToProcess, JobNumber, Workbook.WorkingYear))
             {
                 await DisplayAlertAsync("Processing Error", "Failed to prepare job files/folders.", "Okay");
             }
@@ -206,7 +234,7 @@ namespace FrontFeedProcessor
                         await DisplayAlertAsync("Process Error", String.Format("Unable to extract records from {0}", Process.Parser.DecryptedFiles[0]), "Okay");
                         return false;
                     }
-                    else FinishBatchPreparation(new JobBatch(rowsToProcess[0], records));
+                    else FinishBatchPreparation(new JobBatch(rowsToProcess[0], records, Process.Parser.DecryptedFiles[0]));
                     if (Process.JobBatches.Count == 0) return false;
                     else return true;
                 }
@@ -224,7 +252,7 @@ namespace FrontFeedProcessor
                         }
                         records.AddRange(fileRecords);
                     }
-                    FinishBatchPreparation(new JobBatch(rowsToProcess[0], records));
+                    FinishBatchPreparation(new JobBatch(rowsToProcess[0], records, Process.Parser.DecryptedFiles[0]));
                     if (Process.JobBatches.Count == 0) return false;
                     else return true;
                 }
@@ -247,7 +275,7 @@ namespace FrontFeedProcessor
                             await DisplayAlertAsync("Process Error", String.Format("Unable to extract records from {0}", linkedData), "Okay");
                             return false;
                         }
-                        else FinishBatchPreparation(new JobBatch(rowsToProcess[i], records));
+                        else FinishBatchPreparation(new JobBatch(rowsToProcess[i], records, Process.Parser.DecryptedFiles[i]));
                     }
                     if (Process.JobBatches.Count < 2) return false;
                     else return true;

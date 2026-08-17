@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace FrontFeedProcessor
 {
@@ -16,27 +17,31 @@ namespace FrontFeedProcessor
         private GoogleCredential _credentials;
         private Spreadsheet _spreadsheet;
         private SheetsService _sheets;
+        private Catalogue _catalogue;
         public List<Worksheet> Worksheets;
         public int RowCount;
         public int SheetIndex;
         public int RowIndex;
+        public string WorkingYear;
         
         public WorkbookHandler(IConfiguration configuration)
         {
             Worksheets = new List<Worksheet>();
+            _catalogue = configuration.GetSection("Catalogue").Get<Catalogue>() ?? new Catalogue();
+            WorkingYear = DateTime.Now.ToString("yyyy");
             GetApiConfig(configuration);
             GetSpreadsheetMetaData();
         }
-        public async Task<bool> UpdateData()
+        public async Task<bool> UpdateData(bool firstLoad)
         {
             try
             {
                 await BatchRead();
-                SheetIndex = GetDefaultSheetIndex();
+                SheetIndex = GetDefaultSheetIndex(firstLoad);
                 ChangeSheet();
                 return true;
             }
-            catch { return false; }
+            catch (Exception e){ Logger.WriteLog(e.Message, false); return false; }
         }
         public void ChangeSheet()
         {
@@ -50,14 +55,41 @@ namespace FrontFeedProcessor
                 if (Worksheets[SheetIndex].SheetRows[i].Selected) toProcess.Add(Worksheets[SheetIndex].SheetRows[i]);
             return toProcess;
         }
-        private int GetDefaultSheetIndex()
+        public bool YearIsAvailable(int yearChange)
         {
-            string currentMonth = DateTime.Now.ToString("MMMM");
-            for(int i = 0; i < Worksheets.Count; i++)
+            string yearToCheck = (Int32.Parse(WorkingYear) + yearChange).ToString();
+            if (_catalogue.Workbooks.ContainsKey(yearToCheck)) return true;
+            else return false;
+        }
+        public void ChangeYear(int yearChange)
+        {
+            try
             {
-                if (Worksheets[i].Title == currentMonth) return i;
+                Worksheets = new List<Worksheet>();
+                WorkingYear = (Int32.Parse(WorkingYear) + yearChange).ToString();
+                GetSpreadsheetMetaData();
+                if (yearChange < 0) SheetIndex = _spreadsheet.Sheets.Count - 1;
+                else SheetIndex = 0;
             }
-            return Worksheets.Count - 1;
+            catch (Exception e){ Logger.WriteLog(e.Message, false); }
+        }
+        private int GetDefaultSheetIndex(bool firstLoad)
+        {
+            if (firstLoad)
+            {
+                string currentMonth = DateTime.Now.ToString("MMMM");
+                for(int i = 0; i < Worksheets.Count; i++)
+                {
+                    if (Worksheets[i].Title == currentMonth) return i;
+                }
+                return Worksheets.Count - 1;
+            }
+            else
+            {
+                Logger.WriteLog(SheetIndex.ToString(), false);
+                return SheetIndex;
+            }
+            
         }
         private void GetApiConfig(IConfiguration configuration)
         {
@@ -74,10 +106,10 @@ namespace FrontFeedProcessor
         {
             try
             {
-                var request = _sheets.Spreadsheets.Get(_settings.PlanSheetID);
+                var request = _sheets.Spreadsheets.Get(_catalogue.Workbooks[WorkingYear]);
                 _spreadsheet = request.Execute();
             }
-            catch (Exception ex) { Logger.WriteLog(@"C:\Code\TestingFS\goofer.txt", false, ex.Message); }
+            catch (Exception ex) { Logger.WriteLog(ex.Message, false); }
         }
         private List<string> GetRangesToFetch()
         {
@@ -85,7 +117,7 @@ namespace FrontFeedProcessor
         }
         private async Task BatchRead()
         {
-            var batchRequest = _sheets.Spreadsheets.Values.BatchGet(_settings.PlanSheetID);
+            var batchRequest = _sheets.Spreadsheets.Values.BatchGet(_catalogue.Workbooks[WorkingYear]);
             batchRequest.Ranges = GetRangesToFetch();
             BatchGetValuesResponse batchResponse = await batchRequest.ExecuteAsync();
             if(batchResponse.ValueRanges != null)

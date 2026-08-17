@@ -3,18 +3,18 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FrontFeedProcessor.ReportSummary">
     <Border Stroke="Blue">
-        <Grid RowDefinitions="25,25,25,25,25,25,25,25" ColumnDefinitions="50,50,50,50,50,50,50,50,50,50,50,50">
-            <Label Text="Summary" Grid.Row="1" Grid.Column="6" Grid.ColumnSpan="2"/>
-            <Label Text="Mailing Segment:" Grid.Row="2" Grid.Column="2" Grid.ColumnSpan="2" />
-            <Label x:Name="MailingSegmentData" Grid.Row="2" Grid.Column="5" Grid.ColumnSpan="7" />
-            <Label Text="Class of Postage:" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2" />
-            <Label x:Name="ClassOfPostageData" Grid.Row="3" Grid.Column="5" Grid.ColumnSpan="7" />
-            <Label Text="Zenger Job Number:" Grid.Row="4" Grid.Column="2" Grid.ColumnSpan="2" />
-            <Label x:Name="ZGJobNumberData" Grid.Row="4" Grid.Column="5" Grid.ColumnSpan="7" />
-            <Label Text="Report Path:" Grid.Row="5" Grid.Column="2" Grid.ColumnSpan="2" />
-            <Label x:Name="ReportPathData" Grid.Row="5" Grid.Column="5" Grid.ColumnSpan="7" />
-            <Label Text="Other Warnings:" Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2" />
-            <Label x:Name="WarningData" Grid.Row="6" Grid.Column="5" Grid.ColumnSpan="7" />
+        <Grid RowDefinitions="25,25,25,25,25,25,25,25" ColumnDefinitions="250,750">
+            <Label Text="Summary" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <Label Text="Mailing Segment:" Grid.Row="2" Grid.Column="0" />
+            <Label x:Name="MailingSegmentData" Grid.Row="2" Grid.Column="1" />
+            <Label Text="Class of Postage:" Grid.Row="3" Grid.Column="0"/>
+            <Label x:Name="ClassOfPostageData" Grid.Row="3" Grid.Column="1"/>
+            <Label Text="Zenger Job Number:" Grid.Row="4" Grid.Column="0"/>
+            <Label x:Name="ZGJobNumberData" Grid.Row="4" Grid.Column="1"/>
+            <Label Text="Report Path:" Grid.Row="5" Grid.Column="0" />
+            <Label x:Name="ReportPathData" Grid.Row="5" Grid.Column="1" Grid.RowSpan="2"/>
+            <Label Text="Other Warnings:" Grid.Row="7" Grid.Column="0" />
+            <Label x:Name="WarningData" Grid.Row="7" Grid.Column="1" />
         </Grid>
     </Border>
 </ContentView>

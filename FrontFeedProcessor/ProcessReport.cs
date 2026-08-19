@@ -59,7 +59,13 @@ namespace FrontFeedProcessor
             }
             catch { return false; }
         }
-        //ADD ARCHIVE (BELOW) TO SETTINGS PAGE (default to current archive location)
-        //ARCHIVE PGP ON FTP FILES WHEN REPORT IS BUILT (..incoming_data/Direct_Mail/Archive)
+        public void AddErrorMessages()
+        {
+            for(int i = 0; i < ErrorReport.Messages.Count; i++)
+            {
+                if (OtherWarnings.Length == 0) OtherWarnings = ErrorReport.Messages[i];
+                else OtherWarnings = String.Format("{0} | {1}", OtherWarnings, ErrorReport.Messages[i]);
+            }
+        }
     }
 }

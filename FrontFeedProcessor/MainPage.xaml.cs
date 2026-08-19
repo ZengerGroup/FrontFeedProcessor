@@ -20,12 +20,14 @@ namespace FrontFeedProcessor
         //private readonly Catalogue _catalogue;
         private WorkbookHandler Workbook;
         private ProcessHandler Process;
+        private bool NewJobNumber;
 
 
         public MainPage(IConfiguration configuration)
         {
             InitializeComponent();
             Logger.InitializeLogger(configuration);
+            ErrorReport.Initialize();
             Workbook = new WorkbookHandler(configuration);
             Process = new ProcessHandler(configuration);
             UpdateDisplay(true, true);
@@ -133,10 +135,7 @@ namespace FrontFeedProcessor
         {
             try
             {
-                PickOptions options = new PickOptions
-                {
-                    PickerTitle = "Select Files to Decrypt."
-                };
+                PickOptions options = new PickOptions { PickerTitle = "Select Files to Decrypt." };
                 IEnumerable<FileResult> results = await FilePicker.Default.PickMultipleAsync(options);
                 if (results != null && results.Any())
                 {
@@ -149,10 +148,7 @@ namespace FrontFeedProcessor
                     }
                 }
             }
-            catch
-            {
-                await DisplayAlertAsync("I/O Error", "Failed to select files, program may need restart.", "Okay");
-            }
+            catch { await DisplayAlertAsync("I/O Error", "Failed to select files, program may need restart.", "Okay"); }
         }
         private async void ProcessButton_Clicked(object sender, EventArgs e)
         {
@@ -194,10 +190,11 @@ namespace FrontFeedProcessor
         {
             if (enteredJobNumber != planJobNumber)
             {
-                if (enteredJobNumber == string.Empty || enteredJobNumber == null || enteredJobNumber.Trim() == "") return false;
-                else return true;
+                if (enteredJobNumber == string.Empty || enteredJobNumber == null || enteredJobNumber.Trim() == "") NewJobNumber = false;
+                else NewJobNumber = true;
             }
-            else return false;
+            else NewJobNumber = false;
+            return NewJobNumber;
         }
         private async Task RunProcess(List<Row> rowsToProcess, string JobNumber)
         {
@@ -211,6 +208,8 @@ namespace FrontFeedProcessor
                 {
                     if (Process.ProcessJob(rowsToProcess, JobNumber, NoMemberIdBox.IsChecked))
                     {
+                        if (NewJobNumber) Workbook.UpdateGoogleSheet(Process.JobBatches, JobNumber);
+                        else Workbook.UpdateGoogleSheet(Process.JobBatches);
                         await DisplayAlertAsync("Processing Complete!", "Job processing complete.", "Okay");
                         string archivePath = Preferences.Get("archive_path", "_");
                         if(archivePath != "_") for (int i = 0; i < Process.EncryptedPaths.Count; i++)
@@ -318,6 +317,7 @@ namespace FrontFeedProcessor
         }
         private void OpenReportWindow(ProcessReport report)
         {
+            report.AddErrorMessages();
             var ReportWindow = new Window(new ReportPage(report))
             {
                 Title = "Process Report",

@@ -8,8 +8,8 @@ namespace FrontFeedProcessor
     public static class Logger
     {
         static string LogDirectory;
-        static string LogPath; //= Path.Combine(Configurator.LogPath, String.Format("{0}.txt", DateTime.Now.ToString("MMMyyyy")));
-        static string CrashPath;// = Path.Combine(Configurator.LogPath, String.Format("Crash_{0}.txt", DateTime.Now.ToString("MMMyyyy")));
+        static string LogPath;
+        static string CrashPath;
 
         public static void InitializeLogger(IConfiguration configuration)
         {

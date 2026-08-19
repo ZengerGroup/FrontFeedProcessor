@@ -73,6 +73,52 @@ namespace FrontFeedProcessor
             }
             catch (Exception e){ Logger.WriteLog(e.Message, false); }
         }
+        public void UpdateGoogleSheet(List<JobBatch> batches)
+        {
+            for(int i = 0; i < batches.Count; i++)
+            {
+                try
+                {
+                    string cellString = String.Format("{0}!O{1}", batches[i].BatchRows[0].Month, batches[i].BatchRows[0].RowNumber);
+                    var valueRange = new ValueRange();
+                    valueRange.Values = new List<IList<object>> { new List<object> { batches[i].BatchRecords.Count } };
+                    var updateRequest = _sheets.Spreadsheets.Values.Update(valueRange, _catalogue.Workbooks[WorkingYear], cellString);
+                    updateRequest.ValueInputOption = SpreadsheetsResource.ValuesResource.UpdateRequest.ValueInputOptionEnum.RAW;
+                    UpdateValuesResponse response = updateRequest.Execute();
+                }
+                catch { ErrorReport.NewError(String.Format("Failed to update google sheet, please review. Row: {0}", batches[i].BatchRows[0].RowNumber)); }
+            }
+        }
+        public void UpdateGoogleSheet(List<JobBatch> batches, string jobNumber)
+        {
+            for (int i = 0; i < batches.Count; i++)
+            {
+                try
+                {
+                    string countCellString = String.Format("{0}!O{1}", batches[i].BatchRows[0].Month, batches[i].BatchRows[0].RowNumber);
+                    string jobCellString = String.Format("{0}!E{1}", batches[i].BatchRows[0].Month, batches[i].BatchRows[0].RowNumber);
+                    var toUpdateRange = new List<ValueRange>();
+                    toUpdateRange.Add(new ValueRange
+                    {
+                        Range = countCellString,
+                        Values = new List<IList<object>> { new List<object> { batches[i].BatchRecords.Count } }
+                    });
+                    toUpdateRange.Add(new ValueRange
+                    {
+                        Range = jobCellString,
+                        Values = new List<IList<object>> { new List<object> { jobNumber } }
+                    });
+                    var batchBody = new BatchUpdateValuesRequest
+                    {
+                        ValueInputOption = "RAW",
+                        Data = toUpdateRange
+                    };
+                    var batchRequest = _sheets.Spreadsheets.Values.BatchUpdate(batchBody, _catalogue.Workbooks[WorkingYear]);
+                    BatchUpdateValuesResponse response = batchRequest.Execute();
+                }
+                catch { ErrorReport.NewError(String.Format("Failed to update google sheet, please review. Row: {0}", batches[i].BatchRows[0].RowNumber)); }
+            }
+        }
         private int GetDefaultSheetIndex(bool firstLoad)
         {
             if (firstLoad)

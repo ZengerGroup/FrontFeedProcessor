@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="FrontFeedProcessor.ReportSummary">
     <Border Stroke="Blue">
-        <Grid RowDefinitions="25,25,25,25,25,25,25,25" ColumnDefinitions="250,750">
+        <Grid RowDefinitions="25,25,25,25,25,25,25,25,25" ColumnDefinitions="250,750">
             <Label Text="Summary" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
             <Label Text="Mailing Segment:" Grid.Row="2" Grid.Column="0" />
             <Label x:Name="MailingSegmentData" Grid.Row="2" Grid.Column="1" />
@@ -14,7 +14,7 @@
             <Label Text="Report Path:" Grid.Row="5" Grid.Column="0" />
             <Label x:Name="ReportPathData" Grid.Row="5" Grid.Column="1" Grid.RowSpan="2"/>
             <Label Text="Other Warnings:" Grid.Row="7" Grid.Column="0" />
-            <Label x:Name="WarningData" Grid.Row="7" Grid.Column="1" />
+            <Label x:Name="WarningData" Grid.Row="7" Grid.Column="1" Grid.RowSpan="2"/>
         </Grid>
     </Border>
 </ContentView>

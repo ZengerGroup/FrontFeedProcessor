@@ -19,8 +19,7 @@ namespace FrontFeedProcessor
             for(int i =0; i < rowList.Count; i++)
             {
                 if (rowList[i].Count < 58) continue;
-                //else File.AppendAllText(@"C:\Code\TestingFS\ROWINDEXCOUNT.txt", String.Format("{0} - {1} - {2}{3}",Title,i.ToString(), rowList[i].Count.ToString(),Environment.NewLine));
-                rows.Add(new Row(rowList[i], Title));
+                rows.Add(new Row(rowList[i], Title, (i + 1)));
             }
             return rows.ToArray();
         }

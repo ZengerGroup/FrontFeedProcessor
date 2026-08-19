@@ -68,6 +68,15 @@ namespace FrontFeedProcessor
         {
             EncryptedPaths.Add(fullPath);
         }
+        public int GetRecordCount()
+        {
+            int total = 0;
+            for(int i = 0; i < JobBatches.Count; i++)
+            {
+                total += JobBatches[i].BatchRecords.Count;
+            }
+            return total;
+        }
         private bool CreateDirectories(string djc, string jobNumber, string workingYear)
         {
             try

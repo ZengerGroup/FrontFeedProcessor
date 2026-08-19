@@ -70,8 +70,9 @@ namespace FrontFeedProcessor
         public bool SecondNetwork;
         public bool NoMemberIds;
         public string Month;
+        public int RowNumber;
 
-        public Row(IList<object> rowList, string month)
+        public Row(IList<object> rowList, string month, int rowNumber)
         {
             Segment = rowList[0].ToString() ?? "void";
             LeadSourceType = rowList[1].ToString() ?? "void";
@@ -136,6 +137,7 @@ namespace FrontFeedProcessor
             NoMemberIds = (MemberIdStart1 == "");
             SecondNetwork = (DescriptorJobCode2 != "");
             Month = month;
+            RowNumber = rowNumber;
         }
     }
 }

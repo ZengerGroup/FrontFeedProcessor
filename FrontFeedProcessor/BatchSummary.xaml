@@ -11,13 +11,13 @@
             <Label Text="Days for Intrafile Suppression:" Grid.Row="3" Grid.Column="0" />
             <Label x:Name="DaysForSuppressionData" Grid.Row="3" Grid.Column="1" />
             <Label Text="Additional Suppression Criteria:" Grid.Row="4" Grid.Column="0" Grid.RowSpan="2" />
-            <Label x:Name="CriteriaData" Grid.Row="4" Grid.Column="1"/>
-            <Label Text="Additional Info:" Grid.Row="5" Grid.Column="0"/>
-            <Label x:Name="InfoData" Grid.Row="5" Grid.Column="1" />
-            <Label Text="State Selection:" Grid.Row="6" Grid.Column="0"/>
-            <Label x:Name="StateSelectionData" Grid.Row="6" Grid.Column="1" />
-            <Label Text="Network:" Grid.Row="7" Grid.Column="0" />
-            <Label x:Name="NetworkData" Grid.Row="7" Grid.Column="1" />
+            <Label x:Name="CriteriaData" Grid.Row="4" Grid.Column="1" Grid.RowSpan="2"/>
+            <Label Text="Additional Info:" Grid.Row="6" Grid.Column="0"/>
+            <Label x:Name="InfoData" Grid.Row="6" Grid.Column="1" />
+            <Label Text="State Selection:" Grid.Row="7" Grid.Column="0"/>
+            <Label x:Name="StateSelectionData" Grid.Row="7" Grid.Column="1" />
+            <Label Text="Network:" Grid.Row="8" Grid.Column="0" />
+            <Label x:Name="NetworkData" Grid.Row="8" Grid.Column="1" />
         </Grid>
     </Border>
 </ContentView>

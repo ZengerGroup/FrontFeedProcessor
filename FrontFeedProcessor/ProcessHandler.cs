@@ -87,8 +87,8 @@ namespace FrontFeedProcessor
                 string reportsPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "Reports");
                 string pdfProofPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "PDF Proofs");
                 string dataPath = Path.Combine(_settings.GRXPath, string.Format("{0}({1})", djc, jobNumber), "Data");
-                string proofMailPath = Path.Combine(_settings.ProofingMailTrafficPath, workingYear,
-                    String.Format("{0}_{1}", DateTime.ParseExact(RowsToProcess[0].Month, "MMMM", CultureInfo.InvariantCulture).Month.ToString("00"), RowsToProcess[0].Month));
+                string proofMailPath = Path.Combine(_settings.ProofingMailTrafficPath, workingYear, String.Format( "{0}_{1}", DateTime.ParseExact(
+                    RowsToProcess[0].Month, "MMMM", CultureInfo.InvariantCulture).Month.ToString("00"), RowsToProcess[0].Month),String.Format("{0}({1})", djc, jobNumber));
                 Directory.CreateDirectory(proofMailPath);
                 Directory.CreateDirectory(SuppliedPath);
                 Directory.CreateDirectory(WorkingPath);
